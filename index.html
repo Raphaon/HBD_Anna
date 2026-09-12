@@ -485,9 +485,9 @@
     .fake-photo{aspect-ratio:4/5;background:linear-gradient(145deg,#e8a6b9,#a64b6f);display:grid;place-items:center;border-radius:3px;color:#fff;overflow:hidden}
     .fake-photo img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
     .polaroid p{text-align:center;font:1.7rem var(--script);margin:15px 0 0}
-    .letter{font:1.12rem/1.85 var(--serif);color:#4a3441}
-    .letter p{margin:0 0 1rem}
-    .final-sign{font:4.4rem/1 var(--script);color:#c6537b;margin-top:22px}
+    .letter{font:1.06rem/1.72 var(--serif);color:#4a3441}
+    .letter p{margin:0 0 .72rem}
+    .final-sign{font:4.1rem/1 var(--script);color:#c6537b;margin-top:14px}
     .final-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
     footer{padding:25px clamp(22px,7vw,110px);background:#6f2447;color:#fff;display:flex;justify-content:space-between;gap:20px;font-size:.8rem;flex-wrap:wrap}
     footer span{display:flex;align-items:center;gap:7px}
@@ -622,6 +622,29 @@
       .memory-track{padding:8px 6px 14px}
     }
 
+    /* ---- MODE PROJECTION ----
+       Beaucoup de projecteurs sortent en 1280x720 : les paliers de largeur
+       ne s'y déclenchent pas et le texte reste minuscule. Ce mode force la
+       grande typographie quelle que soit la résolution. */
+    :root.mode-projection{font-size:18px;scroll-snap-type:y proximity}
+    :root.mode-projection .section-inner{width:min(1460px,100%)}
+    :root.mode-projection .progress{height:7px}
+    :root.mode-projection .rail button{width:40px;height:40px}
+    :root.mode-projection .rail button .icon{width:18px;height:18px}
+    :root.mode-projection .cursor-glow{display:none}
+    /* Les respirations valent pour une lecture solo ; devant une salle,
+       un écran figé passe pour une panne. On accélère. */
+    :root.mode-projection .lettres-collent .lettre{--vol:1.05s;--ecart:40ms}
+    :root.mode-projection .reveal{transition-duration:.55s}
+    /* Repere discret pour savoir quel mode est actif. */
+    .mode-repere{
+      position:fixed;right:14px;bottom:14px;z-index:70;pointer-events:none;
+      font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:#fff;background:rgba(111,36,71,.82);padding:6px 12px;border-radius:999px;
+      opacity:0;transition:opacity .4s;
+    }
+    :root.mode-projection .mode-repere{opacity:.85}
+
     @media(hover:none){.cursor-glow{display:none}}
 
     @media(prefers-reduced-motion:reduce){
@@ -674,6 +697,7 @@
   <canvas id="confetti" aria-hidden="true"></canvas>
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="mode-repere" aria-hidden="true">Projection</div>
 
   <div id="intro">
     <div class="intro-card glass">
@@ -729,8 +753,8 @@
     <section class="section" id="hero" aria-label="Accueil">
       <div class="section-inner hero-grid">
         <div class="hero-copy reveal">
-          <p class="eyebrow">UNE PETITE SURPRISE POUR TOI</p>
-          <h2 id="heroTitre">Joyeux<br><em>anniversaire</em><br><span data-bind="prenom"></span> <span aria-hidden="true">♡</span></h2>
+          <p class="eyebrow">AUJOURD'HUI, REGARDE-TOI AUTREMENT</p>
+          <h2 id="heroTitre">Pas dans<br><em>un miroir.</em><br><span>Dans leurs yeux.</span></h2>
           <p>Tu passes tes journées à t'occuper des autres. Aujourd'hui, c'est l'inverse : tu n'as rien à faire, rien à organiser, personne à rassurer. Juste à lire.</p>
           <div class="hero-actions">
             <button class="primary jump" data-target="story"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Entrer dans l'histoire<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
@@ -748,7 +772,7 @@
             <figcaption>
               <strong data-bind="nomComplet"></strong>
               <span class="profil-alias" aria-label="Surnom">@<span data-bind="alias"></span></span>
-              <p class="profil-note">Des rêves plein la tête et un monde à conquérir ♡</p>
+              <p class="profil-note">Travailleuse sociale. Rire bruyant. Sushis non négociables. ♡</p>
             </figcaption>
           </figure>
 
@@ -763,9 +787,9 @@
           <div class="soft-card lya-card reveal">
             <div class="mini-avatar" aria-hidden="true"><svg class="icon"><use href="#i-heart"/></svg></div>
             <div>
-              <p class="eyebrow">COUCOU</p>
+              <p class="eyebrow">COUCOU ANNA</p>
               <h3 class="serif" style="font-size:2rem;margin:.2rem 0;font-weight:600">Moi, c'est Lya.</h3>
-              <p style="line-height:1.7;margin-bottom:0;color:var(--muted)">Je t'accompagne aujourd'hui pour te rappeler à quel point tu es extraordinaire. Alors… on continue ? ♡</p>
+              <p style="line-height:1.7;margin-bottom:0;color:var(--muted)">On m'a confié une mission simple : te montrer ce que tu fais sans t'en rendre compte — et l'effet que ça a sur les gens. On y va ? ♡</p>
             </div>
           </div>
           <div>
@@ -814,8 +838,8 @@
 
     <section class="section" id="intermede" aria-label="Respiration">
       <div class="intermede-mot">
-        <p class="eyebrow reveal">ON MARQUE UNE PAUSE</p>
-        <p class="reveal">Voilà pour les souvenirs. Maintenant, écoute ce qu'ils ont à te dire.</p>
+        <p class="eyebrow reveal">LYA REVIENT UNE SECONDE</p>
+        <p class="reveal">Jusqu'ici, c'est nous qui parlions de toi. Alors j'ai demandé aux autres.</p>
       </div>
     </section>
 
@@ -866,18 +890,16 @@
       <div class="section-inner final-grid">
         <div class="polaroid reveal">
           <div class="fake-photo"><img id="polaroidPhoto" alt="" loading="lazy"></div>
-          <p>Merci d'être toi. ♡</p>
+          <p>Celle qu'on appelle. ♡</p>
         </div>
         <div class="reveal d1">
-          <p class="eyebrow">UN DERNIER MOT…</p>
-          <h2 class="title" data-bind="nomComplet"></h2>
+          <p class="eyebrow">LYA S'ARRÊTE ICI — LA SUITE VIENT DE NOUS</p>
           <div class="letter" id="letter"></div>
           <p class="final-verse">«&#8239;Car je connais les projets que j'ai formés sur vous, dit l'Éternel, projets de paix et non de malheur, afin de vous donner un avenir et de l'espérance.&#8239;»
             <span class="ref">Jérémie 29.11</span></p>
-          <p class="final-sign">Joyeux anniversaire ♡</p>
+          <p class="final-sign" id="finalSouhait">Joyeux anniversaire <span data-bind="prenom"></span> ♡</p>
           <div class="final-actions">
             <button class="primary" id="againBtn"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Encore des confettis</button>
-            <button class="ghost jump" data-target="hero"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>Revoir depuis le début</button>
           </div>
         </div>
       </div>
@@ -964,7 +986,7 @@
           icone:"i-crown", photo:"Assets/Images/web/anna-graduation.jpg", degrade:"linear-gradient(160deg,#20233c,#3f5a86 58%,#8fb4d9)" },
         { date:"28 ans", legende:"28 ans — et personne n'y croit",
           titre:"28 ans, et personne n'y croit",
-          texte:"Sur le papier, vingt-huit. À l'œil nu, beaucoup moins. Il y a des âges qu'on subit et d'autres qu'on porte : celui-ci, tu le portes sans même avoir l'air de le remarquer.",
+          texte:"Sur le papier, vingt-huit. À l'œil nu, le dossier reste ouvert — surtout quand des sushis arrivent sur la table et que toute dignité prend congé.",
           icone:"i-cake", photo:"Assets/Images/web/anna-28-rose.jpg", degrade:"linear-gradient(160deg,#fbd596,#d9a441 55%,#6b4a22)" },
         { date:"Bonne fête", legende:"Ce sourire-là ♡",
           titre:"Ce sourire-là",
@@ -982,7 +1004,7 @@
 
       quiz: [
         { icone:"i-cake",  question:"Physiquement",                  reponse:"Âge classé confidentiel — toujours rayonnante." },
-        { icone:"i-food",  question:"Quand tu vois de la nourriture", reponse:"8 ans. Immédiatement." },
+        { icone:"i-food",  question:"Quand les sushis arrivent",       reponse:"8 ans. Toute dignité officiellement suspendue." },
         { icone:"i-brain", question:"Quand tu donnes des conseils",   reponse:"52 ans de sagesse." },
         { icone:"i-moon",  question:"Quand tu es fatiguée",           reponse:"93 ans, couverture obligatoire." }
       ],
@@ -1051,8 +1073,11 @@ Bon anniversaire 🎉🎂🥰` },
       },
 
       lettre: [
-        "On ne te le dit pas assez souvent, alors cette fois c'est écrit. Comme ça tu pourras y revenir les jours où la journée aura été longue.",
-        "Que cette année te rende un peu de ce que tu distribues sans compter : de la paix, des projets qui aboutissent, et des gens qui te le disent plus souvent qu'une fois par an."
+        "Anna, si tu es arrivée jusqu'ici, tu as compris qu'on ne voulait pas seulement te souhaiter un bon anniversaire.",
+        "Tout ce que tu viens de lire, personne ne te l'avait demandé. C'est venu tout seul.",
+        "Il y aura cette année des jours où tu te sentiras moins forte, moins sûre, moins lumineuse. Ces jours-là, reviens ici. Pas pour ton anniversaire — pour te rappeler ce que toi, tu oublies.",
+        "On ne fête pas seulement tes 28 ans, mais aussi ce qui n'est pas encore arrivé : les gens que tu n'as pas rencontrés, et tout ce que Dieu n'a pas fini d'écrire.",
+        "Alors continue de rire fort, de prendre soin des gens, et n'oublie jamais ce que ta présence laisse derrière elle."
       ]
     };
     /* ====================== fin personnalisation ====================== */
@@ -1094,14 +1119,14 @@ Bon anniversaire 🎉🎂🥰` },
         });
       })(racine);
     }
-    const heroTitre = $('#heroTitre');
-    if (heroTitre && !REDUCED) {
+    const souhaitFinal = $('#finalSouhait');
+    if (souhaitFinal && !REDUCED) {
       // Les <br> ne donnent pas d'espace dans textContent : on les remplace
       // avant de composer l'etiquette lue par les lecteurs d'ecran.
-      const copie = heroTitre.cloneNode(true);
+      const copie = souhaitFinal.cloneNode(true);
       copie.querySelectorAll('br').forEach(br => br.replaceWith(' '));
-      heroTitre.setAttribute('aria-label', copie.textContent.replace(/\s+/g, ' ').trim());
-      eclateEnLettres(heroTitre);
+      souhaitFinal.setAttribute('aria-label', copie.textContent.replace(/\s+/g, ' ').trim());
+      eclateEnLettres(souhaitFinal);
     }
 
     // Portraits : on masque proprement le conteneur si aucune photo n'est fournie.
@@ -1263,7 +1288,6 @@ Bon anniversaire 🎉🎂🥰` },
       document.body.classList.remove('locked');
       $('#nav').classList.add('show');
       setSound(true);
-      $('#heroTitre')?.classList.add('lettres-collent');
       petals(14);
       setTimeout(() => $('#intro').setAttribute('hidden', ''), 1000);
       setTimeout(() => $('#hero').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' }), 220);
@@ -1277,13 +1301,39 @@ Bon anniversaire 🎉🎂🥰` },
       tone(520, .07);
     }));
 
-    /* Rang et cadence, calcules une seule fois au chargement. */
-    $$('.section').forEach(sec => {
-      const items = $$('.reveal', sec);
-      // Cascade plus serrée quand la section compte beaucoup d'éléments,
-      // pour que l'ensemble reste sous ~1,2 s.
-      sec.style.setProperty('--pas', items.length > 8 ? '65ms' : '95ms');
-      items.forEach((x, i) => x.style.setProperty('--i', i));
+    /* ---------- Deux usages : lecture solo et projection ----------
+       Solo : rythme posé, respirations. Projection : texte plus grand et
+       cascades resserrées, parce qu'un écran figé devant une salle passe
+       pour une panne. Bascule : ?projection dans l'URL, ou la touche P. */
+    const enProjection = () => document.documentElement.classList.contains('mode-projection');
+
+    function appliquerCadence(){
+      const court = enProjection();
+      $$('.section').forEach(sec => {
+        const items = $$('.reveal', sec);
+        // Cascade plus serrée quand la section compte beaucoup d'éléments.
+        const pas = items.length > 8 ? (court ? 42 : 65) : (court ? 60 : 95);
+        sec.style.setProperty('--pas', pas + 'ms');
+        items.forEach((x, i) => x.style.setProperty('--i', i));
+      });
+    }
+
+    function setProjection(on, annoncer){
+      document.documentElement.classList.toggle('mode-projection', on);
+      store.set('projection', on);
+      appliquerCadence();
+      if (annoncer) toast(on ? 'Mode projection — texte agrandi' : 'Mode lecture', on ? 'i-sun' : 'i-moon');
+    }
+
+    setProjection(
+      new URLSearchParams(location.search).has('projection') || store.get('projection', false),
+      false
+    );
+
+    addEventListener('keydown', e => {
+      if (e.key !== 'p' && e.key !== 'P') return;
+      if ($('.modal.open')) return;
+      setProjection(!enProjection(), true);
     });
 
     /* Chaque élément se révèle pour lui-même, dès qu'il entre dans l'écran.
@@ -1298,6 +1348,22 @@ Bon anniversaire 🎉🎂🥰` },
       });
     }, { threshold: 0, rootMargin: '0px 0px -6% 0px' });
     $$('.reveal').forEach(el => revealObs.observe(el));
+
+    /* Le souhait se pose lettre par lettre quand la finale arrive — puis
+       seulement, les confettis. C'est la recompense, pas l'ouverture. */
+    if (souhaitFinal && !REDUCED) {
+      const obsSouhait = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if (!e.isIntersecting) return;
+          obsSouhait.disconnect();
+          souhaitFinal.classList.add('lettres-collent');
+          const n = $$('.lettre', souhaitFinal).length;
+          const fin = n * 58 + 1500;   // derniere lettre posee
+          setTimeout(() => { launch(150); petals(20); }, fin);
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -18% 0px' });
+      obsSouhait.observe(souhaitFinal);
+    }
 
     /* Rail, navigation et filet du cadeau : on retient la section qui occupe
        le milieu de l'écran. Deterministe, quelle que soit sa hauteur. */
@@ -1391,8 +1457,9 @@ Bon anniversaire 🎉🎂🥰` },
     }
 
     /* ---------- Diaporama : avance seul, se met en pause au survol ---------- */
-    const DIAPO_MS = 5200;
+    const DIAPO_MS_SOLO = 5200, DIAPO_MS_PROJECTION = 7000;
     let diapoTimer = null, diapoEnPause = false;
+    const palierDiapo = () => enProjection() ? DIAPO_MS_PROJECTION : DIAPO_MS_SOLO;
     const jauge = $('#diapoJauge'), barre = $('.diapo-barre');
 
     $('#diapoPoints').innerHTML = CONFIG.souvenirs.map(() => '<i></i>').join('');
@@ -1405,10 +1472,10 @@ Bon anniversaire 🎉🎂🥰` },
       if (diapoEnPause || REDUCED || $('#memoryModal').hasAttribute('hidden')) return;
       requestAnimationFrame(() => {
         barre.classList.add('court');
-        jauge.style.transitionDuration = DIAPO_MS + 'ms';
+        jauge.style.transitionDuration = palierDiapo() + 'ms';
         jauge.style.width = '100%';
       });
-      diapoTimer = setTimeout(() => showMemory(memIndex + 1), DIAPO_MS);
+      diapoTimer = setTimeout(() => showMemory(memIndex + 1), palierDiapo());
     }
     function arreterDiapo(){
       clearTimeout(diapoTimer);
